@@ -12,6 +12,7 @@ function print_theme_image( $image_data, $image_sizes ) {
   if( count( $image_data ) > 0 ) {
     $image_data_select = $image_data['image_type']; // post_thumbnail, acf_field or acf_sub_field
     $size_fallback = $image_data['size_fallback']; // crop to use as fallback
+    $post_id_cache = get_the_ID(); // retrieve post/page ID
     if ( $image_data_select === 'acf_field' ) { // ACF FIELD - be sure to set "image -> image array in ACF options"
       $thumb_id_pre = get_field( $image_data['image_value'] ); // retrieve the image data array
       $thumb_id = $thumb_id_pre['ID']; // retrieve the image ID
@@ -28,7 +29,7 @@ function print_theme_image( $image_data, $image_sizes ) {
       $attachment_title = get_the_title( $thumb_id ); // image title
       $attachment_alt = get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ); // image alt text
       if( count( $image_sizes ) > 0 ) {
-        $sharped_images = wp_cache_get( 'print_theme_image_cache_'.$post_id ); // check if array of images URL is set as cache
+        $sharped_images = wp_cache_get( 'print_theme_image_cache_'.$post_id_cache ); // check if array of images URL is set as cache
         if ( false === $sharped_images ) {
           $sharped_images = array(); // declare arry to use later in data-srcset
           foreach( $image_sizes as $image_size) {
@@ -41,7 +42,7 @@ function print_theme_image( $image_data, $image_sizes ) {
               $sharped_images[] = $thumb_url[$image_size][0]; // retrive fallback image URL
             }
           }
-        	wp_cache_set( 'print_theme_image_cache_'.$post_id, $sharped_images ); // set array of images URL as cache
+        	wp_cache_set( 'print_theme_image_cache_'.$post_id_cache, $sharped_images ); // set array of images URL as cache
         }
         // this is simple HTML - remember to use lazyload (https://github.com/verlok/lazyload) for better performance
         $html_image_output = '';
