@@ -41,7 +41,7 @@ function print_theme_image( $image_data, $image_sizes ) {
               $sharped_images[] = $thumb_url[$image_size][0]; // retrive fallback image URL
             }
           }
-        	wp_cache_set( 'print_theme_image_cache_'.$thumb_id, $sharped_images ); // set array of images URL as cache
+        	wp_cache_set( 'print_theme_image_cache_'.$thumb_id, $sharped_images, 300 ); // set array of images URL as cache
         }
         // this is simple HTML - remember to use lazyload (https://github.com/verlok/lazyload) for better performance
         $html_image_output = '';
